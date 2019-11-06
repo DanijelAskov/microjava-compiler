@@ -10,3 +10,6 @@ logs/
 
 # Ignore MicroJava Compiler output
 *.obj
+
+# Ignore backup files
+*.java~
