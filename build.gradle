@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'askov.schoolprojects.compilerconstruction.mjcompiler'
+version '1.0'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = sourceCompatibility
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation name: 'cup_v10k'
+    implementation name: 'JFlex'
+    implementation name: 'log4j-1.2.17'
+    implementation name: 'mj-runtime-1.1'
+    implementation name: 'symboltable'
+}
+
+test {
+    testLogging {
+        outputs.upToDateWhen {false}
+        showStandardStreams = true
+    }
+}
+
+application {
+    mainClassName = 'askov.schoolprojects.compilerconstruction.mjcompiler.MJCompiler'
+}

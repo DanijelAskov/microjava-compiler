@@ -1,0 +1,471 @@
+package askov.schoolprojects.compilerconstruction.mjcompiler;
+
+import java_cup.runtime.*;
+import askov.schoolprojects.compilerconstruction.mjcompiler.ast.*;
+import org.apache.log4j.*;
+import askov.schoolprojects.compilerconstruction.mjcompiler.loggers.SyntaxErrorMJLogger;
+
+parser code {:
+	
+	private boolean lexicalErrorDetected;
+
+	private boolean syntaxErrorDetected;
+	private boolean fatalSyntaxErrorDetected;
+
+	public boolean lexicalErrorDetected() {
+		return lexicalErrorDetected;
+	}
+	
+    public boolean syntaxErrorDetected() {
+    	return syntaxErrorDetected;
+    }
+    
+    public boolean fatalSyntaxErrorDetected() {
+    	return fatalSyntaxErrorDetected;
+    }
+
+	SyntaxErrorMJLogger syntaxErrorMJLogger = new SyntaxErrorMJLogger();
+	
+	@Override
+	public void syntax_error(Symbol cur_token) {
+	    report_error(null, cur_token);
+	}
+	
+	@Override
+	public void unrecovered_syntax_error(Symbol cur_token) throws java.lang.Exception {
+		syntaxErrorMJLogger.log(null, cur_token.left, null, SyntaxErrorMJLogger.SyntaxErrorKind.FATAL_ERROR);
+	    report_fatal_error(null, null);
+	}
+	
+	@Override
+	public void report_fatal_error(String message, Object info) throws java.lang.Exception {
+		fatalSyntaxErrorDetected = true;
+		done_parsing();
+	}
+
+	@Override
+	public void report_error(String message, Object info) {
+		syntaxErrorDetected = true;
+	}
+
+:}
+
+init with {:
+	lexicalErrorDetected = syntaxErrorDetected = false;
+:}
+
+scan with {:
+	Scanner scanner = getScanner();
+	Symbol symbol = scanner.next_token();
+	if(symbol.sym == sym.ERROR) {
+		lexicalErrorDetected = true;
+		return scan();
+	} else {
+		return symbol; 
+	}
+:}
+
+/* ************** NON-TERMINAL SYMBOLS *************** */
+
+/*
+ * Neterminalni simboli su navedeni po redosledu pojavljivanja na desnoj strani smena.
+ */
+nonterminal Program;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgramName;
+nonterminal DeclList;
+nonterminal MethodDeclList;
+nonterminal ProgramEnd;
+
+nonterminal Decl;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Type;
+nonterminal ConstList;
+nonterminal ErrorProneGlobalVarDecl;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ClassName;
+nonterminal ErrorProneSuperclass;
+nonterminal FieldDeclList;
+nonterminal Methods;
+
+nonterminal Const;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Literal;
+
+nonterminal GlobalVarList;
+nonterminal ErrorGlobalVarDecl;
+
+nonterminal ErrorProneGlobalVar;
+
+nonterminal ErrorProneFieldDecl;
+
+nonterminal FieldList;
+nonterminal ErrorFieldDecl;
+
+nonterminal Field;
+
+nonterminal MethodDecl;
+
+nonterminal ReturnType;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodName;
+nonterminal FormPars;
+nonterminal LocalVarDeclList;
+nonterminal MethodBodyStart;
+nonterminal StatementList;
+nonterminal MethodEnd;
+
+nonterminal FormParList;
+
+nonterminal ErrorProneFormPar;
+
+nonterminal LocalVarDecl;
+
+nonterminal LocalVarList;
+
+nonterminal LocalVar;
+
+nonterminal Statement;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Expr;
+nonterminal ErrorProneExpr;
+nonterminal ActParsStart;
+nonterminal ActPars;
+nonterminal ActParsEnd;
+nonterminal ConditionStart;
+nonterminal ErrorProneCondition;
+nonterminal ConditionEnd;
+nonterminal Else;
+nonterminal DoWhileStatementStart;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Condition;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj DesignatorStart;
+nonterminal ArrayElemAcessDesignatorLBracket;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Term;
+nonterminal Addop;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Factor;
+nonterminal Mulop;
+
+nonterminal ExprList;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj CondTerm;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj CondFactor;
+
+nonterminal Relop;
+
+/* *************** TERMINAL SYMBOLS *************** */
+
+/*
+ * Terminalni simboli su navedeni po redosledu pojavljivanja na desnoj strani smena.
+ */
+
+terminal    PROGRAM;
+terminal    LBRACE;
+
+terminal    String IDENT;
+
+terminal    CONST;
+terminal    SEMI;
+terminal    CLASS;
+terminal    String RBRACE; // Dummy atribut tipa String (videti objašnjenje u PRODUCTIONS delu).
+
+terminal    COMMA;
+
+terminal    ASSIGN;
+
+terminal    Integer   INT;
+terminal    Boolean   BOOL;
+terminal    Character CHAR;
+
+terminal    LBRACKET;
+terminal    RBRACKET;
+
+terminal    EXTENDS;
+
+terminal    LPAREN;
+terminal    String RPAREN; // Dummy atribut tipa String (videti objašnjenje u PRODUCTIONS delu).
+
+terminal    VOID;
+
+terminal    INCR;
+terminal    DECR;
+terminal    IF;
+terminal    WHILE;
+terminal    String BREAK; // Dummy atribut tipa String (videti objašnjenje u PRODUCTIONS delu).
+terminal    String CONTINUE; // Dummy atribut tipa String (videti objašnjenje u PRODUCTIONS delu).
+terminal    String RETURN; // Dummy atribut tipa String (videti objašnjenje u PRODUCTIONS delu).
+terminal    READ;
+terminal    PRINT;
+
+terminal    DOT;
+
+terminal    MINUS;
+
+terminal    NEW;
+
+terminal    TIMES;
+terminal    DIV;
+terminal    MOD;
+
+terminal    PLUS;
+
+terminal    OR;
+
+terminal    AND;
+
+terminal    EQ;
+terminal    NEQ;
+terminal    GT;
+terminal    GEQ;
+terminal    LT;
+terminal    LEQ;
+
+terminal    ELSE;
+
+terminal    DO;
+
+terminal    ERROR;
+
+/* *************** PRECEDENCES *************** */
+
+precedence left ELSE;
+
+/* *************** PRODUCTIONS *************** */
+
+/*
+ * Smene su navođene u poretku koji odgovara preorder obilasku sintaksnog stabla.
+ * Atributi sa nazivom "dummy" uvedeni su, kao što im i ime sugeriše, ne zbog potrebe da se koristi njihova vrednost,
+ * već da bi se mogao zapamtiti u odgavarajucem sintaksnom čvoru broj linije, u izvornom fajlu MikroJava programa, koja sadrži odgovarajući neterminal.
+ */
+
+Program               ::= (Program) PROGRAM ProgramName DeclList LBRACE MethodDeclList ProgramEnd;
+
+ProgramName           ::= (ProgramName) IDENT:ident;
+
+DeclList              ::= (NonEmptyDeclList) DeclList Decl
+                       |  (EmptyDeclList) /* epsilon */;
+
+Decl                  ::= (ConstDecl) CONST Type ConstList SEMI
+                       |  (GlobalVarDecl) ErrorProneGlobalVarDecl 
+                       |  (ClassDecl) CLASS ClassName ErrorProneSuperclass LBRACE FieldDeclList Methods RBRACE;
+
+Type                  ::= (Type) IDENT:ident;
+
+ConstList             ::= (MultipleConstConstList) ConstList COMMA Const
+                       |  (SingleConstConstList) Const;
+
+Const                 ::= (Const) IDENT:ident ASSIGN Literal;
+
+Literal               ::= (IntLiteral) INT:value
+                       |  (BoolLiteral) BOOL:value
+                       |  (CharLiteral) CHAR:value;
+                     
+ErrorProneGlobalVarDecl ::= (VarDecl) Type GlobalVarList SEMI
+                         |  (ErrorGlobalVarDecll) ErrorGlobalVarDecl SEMI;
+                         
+ErrorGlobalVarDecl    ::= (ErrorGlobalVarDecl) error
+                          {:
+                             Symbol symbol = (Symbol)(CUP$MJParser$stack.elementAt(CUP$MJParser$top));
+                             parser.syntaxErrorMJLogger.log(null, symbol.left, null, SyntaxErrorMJLogger.SyntaxErrorKind.INV_DECL);
+                             parser.report_error(null, null);
+                          :};
+
+GlobalVarList         ::= (MultipleVarGlobalVarList) ErrorProneGlobalVar COMMA GlobalVarList 
+                       |  (SingleVarGlobalVarList) ErrorProneGlobalVar;
+
+ErrorProneGlobalVar   ::= (VectorGlobalVar) IDENT:ident LBRACKET RBRACKET
+                       |  (ScalarGlobalVar) IDENT:ident
+                       |  (ErrorGlobalVar) error
+                          {:
+                             Symbol symbol = (Symbol)(CUP$MJParser$stack.elementAt(CUP$MJParser$top));
+                             parser.syntaxErrorMJLogger.log(null, symbol.left, null, SyntaxErrorMJLogger.SyntaxErrorKind.INV_GLOBAL_VAR_DECL);
+                             parser.report_error(null, null);
+                          :};
+
+ClassName             ::= (ClassName) IDENT:ident;
+                
+ErrorProneSuperclass  ::= (NonVoidSuperclass) EXTENDS Type
+                       |  (VoidSuperclass) /* epsilon */
+                       |  (ErrorSuperclass) EXTENDS error
+                          {:
+                             Symbol symbol = (Symbol)(CUP$MJParser$stack.elementAt(CUP$MJParser$top));
+                             parser.syntaxErrorMJLogger.log(null, symbol.left, null, SyntaxErrorMJLogger.SyntaxErrorKind.INV_CLASS_INHERITANCE);
+                             parser.report_error(null, null);
+                          :};
+
+FieldDeclList         ::= (NonEmptyFieldDeclList) FieldDeclList ErrorProneFieldDecl
+                       |  (EmptyFieldDeclList) /* epsilon */;
+
+ErrorProneFieldDecl   ::= (CorrectFieldDecl) Type FieldList SEMI
+                       |  (ErrorFieldDecl1) ErrorFieldDecl SEMI
+                       |  (ErrorFieldDecl2) error
+                          {:
+                             Symbol symbol = (Symbol)(CUP$MJParser$stack.elementAt(CUP$MJParser$top));
+                             parser.syntaxErrorMJLogger.log(null, symbol.left, null, SyntaxErrorMJLogger.SyntaxErrorKind.INV_CLASS_FIELD_DECL);
+                             parser.report_error(null, null);
+                          :};
+
+ErrorFieldDecl        ::= (ErrorFieldDecl) error
+                          {:
+                             Symbol symbol = (Symbol)(CUP$MJParser$stack.elementAt(CUP$MJParser$top));
+                             parser.syntaxErrorMJLogger.log(null, symbol.left, null, SyntaxErrorMJLogger.SyntaxErrorKind.INV_CLASS_FIELD_DECL);
+                             parser.report_error(null, null);
+                          :};
+
+FieldList             ::= (MultipleFieldFieldList) Field COMMA FieldList
+                       |  (SingleFieldFieldList) Field;
+
+Field                 ::= (VectorField) IDENT:ident LBRACKET RBRACKET
+                       |  (ScalarField) IDENT:ident;
+
+Methods               ::= (NonVoidMethods) LBRACE MethodDeclList RBRACE
+                       |  (VoidMethods) /* epsilon */;
+                
+MethodDeclList        ::= (NonEmptyMethodDeclList) MethodDeclList MethodDecl
+                       |  (EmptyMethodDeclList) /* epsilon */;
+                
+MethodDecl            ::= (MethodDecl) ReturnType MethodName LPAREN FormPars RPAREN LocalVarDeclList MethodBodyStart StatementList MethodEnd;
+
+ReturnType            ::= (NonVoidReturnType) Type
+                       |  (VoidReturnType) VOID;
+
+MethodName            ::= (MethodName) IDENT:ident;
+
+FormPars              ::= (NonVoidFormPars) FormParList
+                       |  (VoidFormPars) /* epsilon */;
+
+FormParList           ::= (MultipleFormParFormParList) ErrorProneFormPar COMMA FormParList
+                       |  (SingleFormParFormParList) ErrorProneFormPar;
+                          
+                
+ErrorProneFormPar     ::= (VectorFormPar) Type IDENT:ident LBRACKET RBRACKET
+                       |  (ScalarFormPar) Type IDENT:ident
+                       |  (ErrorFormPar) error
+                          {:
+                             Symbol symbol = (Symbol)(CUP$MJParser$stack.elementAt(CUP$MJParser$top));
+                             parser.syntaxErrorMJLogger.log(null, symbol.left, null, SyntaxErrorMJLogger.SyntaxErrorKind.INV_FORM_PAR);
+                             parser.report_error(null, null);
+                          :};
+                       
+LocalVarDeclList      ::= (NonEmptyLocalVarDeclList) LocalVarDeclList LocalVarDecl
+                       |  (EmptyLocalVarDeclList) /* epsilon */;
+
+LocalVarDecl          ::= (LocalVarDecl) Type LocalVarList SEMI;
+
+LocalVarList          ::= (MultipleVarLocalVarList) LocalVarList COMMA LocalVar
+                       |  (SingleVarLocalVarList) LocalVar;
+
+LocalVar              ::= (VectorLocalVar) IDENT:ident LBRACKET RBRACKET
+                       |  (ScalarLocalVar) IDENT:ident;
+
+MethodBodyStart       ::= (MethodBodyStart) LBRACE;
+
+StatementList         ::= (NonEmptyStatementList) StatementList Statement
+                       |  (EmptyStatementList) /* epsilon */;
+
+Statement             ::= (AssignmentDesignatorStatement) Designator ASSIGN ErrorProneExpr SEMI
+                       |  (MethodCallDesignatorStatement) Designator ActParsStart ActPars ActParsEnd SEMI
+                       |  (IncrDesignatorStatement) Designator INCR SEMI
+                       |  (DecrDesignatorStatement) Designator DECR SEMI
+                       |  (IfThenStatement) IF ConditionStart LPAREN ErrorProneCondition RPAREN ConditionEnd Statement
+                       |  (IfThenElseStatement) IF ConditionStart LPAREN ErrorProneCondition RPAREN ConditionEnd Statement Else Statement
+                       |  (DoWhileStatement) DoWhileStatementStart Statement WHILE ConditionStart LPAREN Condition RPAREN ConditionEnd SEMI
+                       |  (BreakStatement) BREAK:dummy SEMI
+                       |  (ContinueStatement) CONTINUE:dummy SEMI
+                       |  (ReturnNothingStatement) RETURN:dummy SEMI
+                       |  (ReturnExprStatement) RETURN:dummy Expr SEMI
+                       |  (ReadStatement) READ LPAREN Designator RPAREN SEMI
+                       |  (PrintExprStatement) PRINT LPAREN Expr RPAREN SEMI
+                       |  (PrintExprIntConstStatement) PRINT LPAREN Expr COMMA INT:intValue RPAREN SEMI
+                       |  (DelimitedStatement) LBRACE StatementList RBRACE;                  
+                       
+Designator            ::= (IdentDesignator) IDENT:ident
+                       |  (ArrayElemAccessDesignator) DesignatorStart ArrayElemAcessDesignatorLBracket Expr RBRACKET
+                       |  (MemberAccessDesignator) DesignatorStart DOT IDENT:ident;
+                             
+DesignatorStart       ::= (IdentDesignatorStart) IDENT:ident
+                       |  (ArrayElemAccessDesignatorStart) DesignatorStart ArrayElemAcessDesignatorLBracket Expr RBRACKET
+                       |  (MemberAccessDesignatorStart) DesignatorStart DOT IDENT:ident;
+
+ArrayElemAcessDesignatorLBracket ::= (ArrayElemAcessDesignatorLBracket) LBRACKET;
+
+Expr                  ::= (TermExpr) Term
+                       |  (MinusTermExpr) MINUS Term
+                       |  (AddopExpr) Expr Addop Term;
+// Leva rekurzija, jer se zahteva da Addop operatori (+ i -) budu levo ascoijativni
+
+Term                  ::= (FactorTerm) Factor
+                       |  (MulopTerm) Term Mulop Factor;
+// Leva rekurzija, jer se zahteva da Mulop operatori (*, / i %) budu levo asocijativni
+               
+Factor                ::= (DesignatorFactor) Designator
+                       |  (MethodCallFactor) Designator ActParsStart ActPars ActParsEnd
+                       |  (IntFactor) INT:value
+                       |  (CharFactor) CHAR:value
+                       |  (BoolFactor) BOOL:value
+                       |  (NewScalarFactor) NEW Type
+                       |  (NewVectorFactor) NEW Type LBRACKET Expr RBRACKET
+                       |  (DelimitedFactor) LPAREN Expr RPAREN;
+
+ActParsStart          ::= (ActParsStart) LPAREN;
+
+ActPars               ::= (NonVoidActPars) ExprList
+                       |  (VoidActPars) /* epsilon */;
+
+ExprList              ::= (MultipleExprExprList) Expr COMMA ExprList
+                       |  (SingleExprExprList) Expr;
+
+ActParsEnd            ::= (ActParsEnd) RPAREN:dummy;
+
+Mulop                 ::= (TimesMulop) TIMES
+                       |  (DivMulop) DIV
+                       |  (ModMulop) MOD;
+
+Addop                 ::= (PlusAddop) PLUS
+                       |  (MinusAddop) MINUS;
+
+ErrorProneExpr        ::= (CorrectExpr) Expr
+                       |  (ErrorExpr) error
+                          {:
+                             Symbol symbol = (Symbol)(CUP$MJParser$stack.elementAt(CUP$MJParser$top));
+                             parser.syntaxErrorMJLogger.log(null, symbol.left, null, SyntaxErrorMJLogger.SyntaxErrorKind.INV_ASSIGNMENT);
+                             parser.report_error(null, null);
+                          :};
+
+ConditionStart        ::= (ConditionStart) /* epsilon */;
+                          
+ErrorProneCondition   ::= (CorrectCondition) Condition
+                       |  (ErrorCondition) error
+                          {:
+                             Symbol symbol = (Symbol)(CUP$MJParser$stack.elementAt(CUP$MJParser$top));
+                             parser.syntaxErrorMJLogger.log(null, symbol.left, null, SyntaxErrorMJLogger.SyntaxErrorKind.INV_IF_STMT_COND);
+                             parser.report_error(null, null);
+                          :};
+
+Condition             ::= (OrCondition) Condition OR CondTerm
+                       |  (TermCondition) CondTerm;
+
+CondTerm              ::= (AndCondTerm) CondTerm AND CondFactor
+                       |  (FactorCondTerm) CondFactor;
+
+CondFactor            ::= (ExprCondFactor) Expr
+                       |  (RelOpCondFactor) Expr Relop Expr;
+
+Relop                 ::= (EqRelop) EQ
+                       |  (NeqRelop) NEQ
+                       |  (GtRelop) GT
+                       |  (GeqRelop) GEQ
+                       |  (LtRelop) LT
+                       |  (LeqRelop) LEQ;
+
+ConditionEnd          ::= (ConditionEnd) /* epsilon */;
+
+Else                  ::= (Else) ELSE;
+                     
+DoWhileStatementStart ::= (DoWhileStatementStart) DO;
+
+MethodEnd             ::= (MethodEnd) RBRACE;
+
+ProgramEnd            ::= (ProgramEnd) RBRACE:dummy;

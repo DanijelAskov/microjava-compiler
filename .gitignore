@@ -1,0 +1,12 @@
+# Ignore Gradle output files
+.gradle/
+build/
+
+# Ignore IDE-specific files
+.idea/
+
+# Ignore MicroJava Compiler logs
+logs/
+
+# Ignore MicroJava Compiler output
+*.obj
