@@ -24,10 +24,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import askov.schoolprojects.compilerconstruction.mjcompiler.inheritancetree.InheritanceTreeNode;
 import org.apache.log4j.Logger;
 
 import askov.schoolprojects.compilerconstruction.mjcompiler.inheritancetree.InheritanceTree;
+import askov.schoolprojects.compilerconstruction.mjcompiler.inheritancetree.InheritanceTreeNode;
 import askov.schoolprojects.compilerconstruction.mjcompiler.inheritancetree.visitor.LeafNodeVisitor;
 import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
