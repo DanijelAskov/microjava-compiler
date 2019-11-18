@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import askov.schoolprojects.compilerconstruction.mjcompiler.inheritancetree.InheritanceTreeNode;
 import org.apache.log4j.Logger;
 
 import askov.schoolprojects.compilerconstruction.mjcompiler.inheritancetree.InheritanceTree;
@@ -169,7 +170,7 @@ public class MJTab extends Tab {
         LeafNodeVisitor leafNodeListCreator = new LeafNodeVisitor();
         InheritanceTree.ROOT_NODE.accept(leafNodeListCreator);
         List<Obj> leafClasses = new ArrayList<>();
-        for (askov.schoolprojects.compilerconstruction.mjcompiler.inheritancetree.InheritanceTreeNode node : leafNodeListCreator.getLeafNodes()) {
+        for (InheritanceTreeNode node : leafNodeListCreator.getLeafNodes()) {
             leafClasses.add(node.getClss());
         }
         return leafClasses;
