@@ -8,6 +8,8 @@ Similarly to Java, MicroJava source files are compiled to **bytecode**, which is
 
 ![Compilation process](img/compilation.png)
 
+Full project specification can be found [here](https://1drv.ms/b/s!AuZ7wmWsDfythjkXnkK3T5gJ7NIy) and [here](https://1drv.ms/b/s!AuZ7wmWsDfythjgxu8VErKo9wBa7) (Serbian language only).
+
 ## Main language features
 
 * A MicoJava program is a single text file (conventionally, the extension `.mj` is used).
