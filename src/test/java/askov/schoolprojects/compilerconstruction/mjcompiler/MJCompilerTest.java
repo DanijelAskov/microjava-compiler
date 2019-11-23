@@ -30,7 +30,7 @@ import java.io.*;
  */
 public class MJCompilerTest {
 
-    private static final String PATH_PREFIX = "src\\test\\resources\\";
+    private static final String PATH_PREFIX = "src" + File.separator + "test" + File.separator +"resources" + File.separator;
 
     @Test
     public void simpleCalculatorTest() throws Exception {
