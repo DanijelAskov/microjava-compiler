@@ -88,15 +88,11 @@ MicroJava's single line comment starts with two forward slashes with no white sp
 ## Building and testing the project
 
 This project uses [Gradle](https://docs.gradle.org/current/userguide/userguide.html).
-Open command-line interpreter, then type the following commands:
-1. `gradlew build` (Windows) or `./gradlew build` (macOS and Linux), to build the project
-2. `gradlew test` (Windows) or `./gradlew test` (macOS and Linux), to test the compiler and run MicroJava VM.
-   MicroJava Compiler will compile the test file [`simple_calculator.mj`](src/test/resources/simple_calculator.mj) and produce `simple_calculator.obj`.
-   Then, the machine code inside `simple_calculator.obj` will be executed by MicroJava VM. Note that, for testing purposes, standard input has been substituted with a file named [`input_stream.txt`](src/test/resources/input_stream.txt).
+Open command-line interpreter and type the following command: `gradlew build` (Windows) or `./gradlew build` (macOS and Linux), to build the project, test the compiler and run MicroJava VM. MicroJava Compiler will compile the test file [`simple_calculator.mj`](src/test/resources/simple_calculator.mj) and produce `simple_calculator.obj`. Then, the machine code inside `simple_calculator.obj` will be executed by MicroJava VM. Note that, for testing purposes, standard input has been substituted with a file named [`input_stream.txt`](src/test/resources/input_stream.txt).
 
 Of course, you can always run MicroJava Compiler as a standalone application.
 In order to achieve this, you just have to type `gradlew run <source-file-name> <obj-file-name>` (Windows) or `./gradlew build <source-file-name> <obj-file-name>` (macOS and Linux).
 
 ## Note to the reader of this README
 
-If you have any question, suggestion or collaboration offer, please feel free to [contact me](mailto:danijel.askov@gmail.com).
+If you have any question, suggestion or collaboration offer, please feel free to [contact me](mailto:danijel.askov@gmail.com). **If you find this project useful, please consider starring it!**

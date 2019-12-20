@@ -1,106 +1,111 @@
 program SimpleCalculator
-    const char SPACE  = ' ';
-    const char EQUALS  = '=';
+  const char SPACE  = ' ';
+  const char EQUALS  = '=';
 
-    class Calculator {
-        int operand1;
-        int operand2;
-        int result;
-        {
-            void setOperand1(int operand) {
-                this.operand1 = operand;
-            }
-            void setOperand2(int operand) {
-                this.operand2 = operand;
-            }
-            int generateResult() {
-                return 0;
-            }
-            void calculate() {
-                this.result = this.generateResult();
-            }
-            int getOperand1() {
-                return this.operand1;
-            }
-            int getOperand2() {
-                return this.operand2;
-            }
-            int getResult() {
-                return this.result;
-            }
-        }
+  class Calculator {
+    int operand1;
+    int operand2;
+    int result;
+    {
+      void setOperand1(int operand) {
+        this.operand1 = operand;
+      }
+      void setOperand2(int operand) {
+        this.operand2 = operand;
+      }
+      int generateResult() {
+        return 0;
+      }
+      void calculate() {
+        this.result = this.generateResult();
+      }
+      int getOperand1() {
+        return this.operand1;
+      }
+      int getOperand2() {
+        return this.operand2;
+      }
+      int getResult() {
+        return this.result;
+      }
     }
+  }
 
-    class AdditionCalculator extends Calculator {
-        {
-            int generateResult() {
-                return this.operand1 + this.operand2;
-            }
+  class AdditionCalculator extends Calculator {
+      {
+        int generateResult() {
+          return this.operand1 + this.operand2;
         }
-    }
+      }
+  }
 
-    class SubtractionCalculator extends Calculator {
-        {
-            int generateResult() {
-               return this.operand1 - this.operand2;
-            }
-        }
+  class SubtractionCalculator extends Calculator {
+    {
+      int generateResult() {
+        return this.operand1 - this.operand2;
+      }
     }
+  }
 
-    class MultiplicationCalculator extends Calculator {
-        {
-            int generateResult() {
-               return this.operand1 * this.operand2;
-            }
-        }
+  class MultiplicationCalculator extends Calculator {
+    {
+      int generateResult() {
+          return this.operand1 * this.operand2;
+      }
     }
+  }
 
-    class DivisionCalculator extends Calculator {
-        {
-            int generateResult() {
-               return this.operand1 / this.operand2;
-            }
-        }
+  class DivisionCalculator extends Calculator {
+    {
+      int generateResult() {
+          return this.operand1 / this.operand2;
+      }
     }
+  }
 
 {
-    void main() int operand1, operand2; char operator; bool operatorRecognized; Calculator calculator; {
-        do {
-            read(operand1);
-            read(operator);
-            read(operand2);
-            if (operator == '+') {
-                calculator = new AdditionCalculator;
-                operatorRecognized = true;
-            } else if (operator == '-') {
-                calculator = new SubtractionCalculator;
-                operatorRecognized = true;
-            } else if (operator == '*') {
-                calculator = new MultiplicationCalculator;
-                operatorRecognized = true;
-            } else if (operator == '/') {
-                calculator = new DivisionCalculator;
-                operatorRecognized = true;
-            } else {
-                operatorRecognized = false;
-            }
-            if (operatorRecognized) {
-                calculator.setOperand1(operand1);
-                calculator.setOperand2(operand2);
-                calculator.calculate();
-                print(operand1);
-                print(SPACE);
-                print(operator);
-                print(SPACE);
-                print(operand2);
-                print(SPACE);
-                print(EQUALS);
-                print(SPACE);
-                print(calculator.getResult());
-                print(eol);
-            } else {
-                break;
-            }
-        } while (true);
-    }
+  void main()
+  int operand1, operand2;
+  char operator;
+  int numExpressions;
+  Calculator calculator;
+  AdditionCalculator additionCalculator;
+  SubtractionCalculator subtractionCalculator;
+  MultiplicationCalculator multiplicationCalculator;
+  DivisionCalculator divisionCalculator;
+  {
+    numExpressions = 4;
+    additionCalculator = new AdditionCalculator;
+    subtractionCalculator = new SubtractionCalculator;
+    multiplicationCalculator = new MultiplicationCalculator;
+    divisionCalculator = new DivisionCalculator;
+    do {
+      read(operand1);
+      read(operator);
+      read(operand2);
+      if (operator == '+') {
+        calculator = additionCalculator;
+      } else if (operator == '-') {
+        calculator = subtractionCalculator;
+      } else if (operator == '*') {
+        calculator = multiplicationCalculator;
+      } else if (operator == '/') {
+        calculator = divisionCalculator;
+      }
+      calculator.setOperand1(operand1);
+      calculator.setOperand2(operand2);
+      calculator.calculate();
+      print(operand1);
+      print(SPACE);
+      print(operator);
+      print(SPACE);
+      print(operand2);
+      print(SPACE);
+      print(EQUALS);
+      print(SPACE);
+      print(calculator.getResult());
+      print(eol);
+      numExpressions--;
+    } while (numExpressions > 0);
+  }
 }
