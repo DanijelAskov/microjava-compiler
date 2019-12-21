@@ -99,4 +99,4 @@ In order to achieve this, you just have to type `gradlew run <source-file-name> 
 ## Note to the reader of this README
 
 If you have any question, suggestion or collaboration offer, please feel free to [contact me](mailto:danijel.askov@gmail.com).
-**If you find this project useful, please consider starring it!**
+**If you find this repository useful, please consider starring it!**
