@@ -94,7 +94,7 @@ Then, the machine code inside `simple_calculator.obj` will be executed by MicroJ
 Note that, for testing purposes, standard input has been substituted with a file named [`input_stream.txt`](src/test/resources/input_stream.txt).
 
 Of course, you can always run MicroJava Compiler as a standalone application.
-In order to achieve this, you just have to type `gradlew run <source-file-name> <obj-file-name>` (Windows) or `./gradlew build <source-file-name> <obj-file-name>` (macOS and Linux).
+In order to achieve this, you just have to type `gradlew run <source-file-name> <obj-file-name>` (Windows) or `./gradlew run <source-file-name> <obj-file-name>` (macOS and Linux).
 
 ## Note to the reader of this README
 
