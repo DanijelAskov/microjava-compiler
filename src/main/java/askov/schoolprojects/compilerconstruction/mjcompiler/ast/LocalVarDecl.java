@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 7/9/2019 23:59:0
+// 8/0/2020 20:7:40
 
 
 package askov.schoolprojects.compilerconstruction.mjcompiler.ast;
