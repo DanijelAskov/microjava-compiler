@@ -76,7 +76,7 @@ Note that I have used custom directory structure (not the one defined in the spe
   Designator = ident {"." ident | "[" Expr "]"}.
   Relop = "==" | "!=" | ">" | ">=" | "<" | "<=".
   Addop = "+" | "‐".
-  Mulop = "*" | "/" | "%"
+  Mulop = "*" | "/" | "%".
 ```
 
 `ident` is a non-empty sequence of alphanumeric characters and `_`, starting with letter.
