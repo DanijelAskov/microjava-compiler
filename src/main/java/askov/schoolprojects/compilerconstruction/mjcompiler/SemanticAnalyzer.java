@@ -186,6 +186,13 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         return semanticErrorMJLogger;
     }
 
+    private boolean printBoolMethodIsUsed = false;
+    private boolean readBoolMethodIsUsed = false;
+    private boolean vecTimesVecMethodIsUsed = false;
+    private boolean vecPlusVecMethodIsUsed = false;
+    private boolean vecTimesScalarMethodIsUsed = false;
+    private boolean scalarTimesVectorMethodIsUsed = false;
+
     private Obj findNearestDeclaration(String identName, boolean skipCurrentScope) {
         Obj result = Tab.noObj;
 
@@ -327,7 +334,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     public void visit(ProgramName programName) {
         String programIdent = programName.getIdent();
 
-        Obj progObj = findInCurrentScope(programIdent); // Pretra�uje se UNIVERSE opseg.
+        Obj progObj = findInCurrentScope(programIdent); // Pretražuje se UNIVERSE opseg.
 
         if (progObj == Tab.noObj) {
             programName.obj = MJTab.insert(Obj.Prog, programIdent, MJTab.noType);
@@ -342,7 +349,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     public void visit(ProgramEnd programEnd) {
-        Obj mainObj = findInCurrentScope(MAIN); // Pretra�uje se PROGRAM opseg.
+        Obj mainObj = findInCurrentScope(MAIN); // Pretražuje se PROGRAM opseg.
 
         if (mainObj == MJTab.noObj) {
             detectSemanticError(null, programEnd, SemanticErrorKind.MAIN_METHOD_DECL_NOT_FOUND);
@@ -395,7 +402,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         String constantIdent = constant.getIdent();
 
         Obj constantObj = findInCurrentScope(constantIdent);
-        // Pretra�uju se PROGRAM i UNIVERSE opsezi.
+        // Pretražuju se PROGRAM i UNIVERSE opsezi.
 
         if (constantObj == Tab.noObj) {
             constantObj = MJTab.insert(Obj.Con, constant.getIdent(), currentType);
@@ -829,7 +836,10 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
     public void visit(ReadStatement readStatement) {
         Struct designatorType = readStatement.getDesignator().obj.getType();
-        if (designatorType != MJTab.intType && designatorType != MJTab.charType && designatorType != MJTab.BOOL_TYPE) {
+        if (designatorType.equals(MJTab.BOOL_TYPE)) {
+            readBoolMethodIsUsed = true;
+        }
+        if (!designatorType.equals(MJTab.intType) && !designatorType.equals(MJTab.charType) && !designatorType.equals(MJTab.BOOL_TYPE)) {
             if (!designatorType.equals(MJTab.noType) && !(designatorType.getKind() == Struct.Array
                     && designatorType.getElemType().equals(MJTab.noType))) {
                 detectSemanticError(readStatement.getDesignator().obj, readStatement,
@@ -842,6 +852,9 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
     public void visit(PrintExprStatement printExprStatement) {
         Struct exprType = printExprStatement.getExpr().obj.getType();
+        if (exprType.equals(MJTab.BOOL_TYPE)) {
+            printBoolMethodIsUsed = true;
+        }
         if (!exprType.equals(MJTab.intType) && !exprType.equals(MJTab.charType) && !exprType.equals(MJTab.BOOL_TYPE)) {
             if (!exprType.equals(MJTab.noType)
                     && !(exprType.getKind() == Struct.Array && exprType.getElemType().equals(MJTab.noType))) {
@@ -855,6 +868,9 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
     public void visit(PrintExprIntConstStatement printExprIntConstStatement) {
         Struct exprType = printExprIntConstStatement.getExpr().obj.getType();
+        if (exprType.equals(MJTab.BOOL_TYPE)) {
+            printBoolMethodIsUsed = true;
+        }
         if (!exprType.equals(MJTab.intType) && !exprType.equals(MJTab.charType) && !exprType.equals(MJTab.BOOL_TYPE)) {
             if (!exprType.equals(MJTab.noType)
                     && !(exprType.getKind() == Struct.Array && exprType.getElemType().equals(MJTab.noType))) {
@@ -933,7 +949,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         Struct exprType = exprObj.getType();
         Obj expr1Obj = relOpCondFactor.getExpr1().obj;
         Struct expr1Type = expr1Obj.getType();
-        String operator = "";
+        String operator;
         Relop relop = relOpCondFactor.getRelop();
         if (relop instanceof EqRelop) {
             operator = "==";
@@ -991,8 +1007,9 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             addopExpr.obj = new Obj(Obj.Var, "", MJTab.intType);
         } else if (exprType.equals(MJTab.INT_ARRAY_TYPE) && termType.equals(MJTab.INT_ARRAY_TYPE)) {
             addopExpr.obj = new Obj(Obj.Var, "", MJTab.INT_ARRAY_TYPE);
+            vecPlusVecMethodIsUsed = true;
         } else {
-            String operator = "";
+            String operator;
             Addop addop = addopExpr.getAddop();
             if (addop instanceof PlusAddop) {
                 operator = "+";
@@ -1023,12 +1040,16 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             mulopTerm.obj = new Obj(Obj.Var, "", MJTab.intType);
         } else if (termType.equals(MJTab.INT_ARRAY_TYPE) && factorType.equals(MJTab.INT_ARRAY_TYPE)) {
             mulopTerm.obj = new Obj(Obj.Var, "", MJTab.intType);
-        } else if (termType.equals(MJTab.intType) && factorType.equals(MJTab.INT_ARRAY_TYPE)
-                || termType.equals(MJTab.INT_ARRAY_TYPE) && factorType.equals(MJTab.intType)) {
+            vecTimesVecMethodIsUsed = true;
+        } else if (termType.equals(MJTab.intType) && factorType.equals(MJTab.INT_ARRAY_TYPE)) {
             mulopTerm.obj = new Obj(Obj.Var, "", MJTab.INT_ARRAY_TYPE);
+            scalarTimesVectorMethodIsUsed = true;
+        } else if (termType.equals(MJTab.INT_ARRAY_TYPE) && factorType.equals(MJTab.intType)) {
+            mulopTerm.obj = new Obj(Obj.Var, "", MJTab.INT_ARRAY_TYPE);
+            vecTimesScalarMethodIsUsed = true;
         } else {
             if (factorType != MJTab.noType || factorObj.getKind() == Obj.Meth) {
-                String operator = "";
+                String operator;
                 Mulop mulop = mulopTerm.getMulop();
                 if (mulop instanceof TimesMulop) {
                     operator = "*";
@@ -1121,7 +1142,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     public void visit(BoolFactor boolFactor) {
-        boolFactor.obj = new Obj(Obj.Con, "", MJTab.BOOL_TYPE, boolFactor.getValue().booleanValue() ? 1 : 0, 1);
+        boolFactor.obj = new Obj(Obj.Con, "", MJTab.BOOL_TYPE, boolFactor.getValue() ? 1 : 0, 1);
     }
 
     public void visit(NewScalarFactor newScalarFactor) {
@@ -1300,4 +1321,29 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         memberAccessDesignatorStart.obj = memberAccessDesignatorStartObj;
     }
+
+    public boolean printBoolMethodIsUsed() {
+        return printBoolMethodIsUsed;
+    }
+
+    public boolean readBoolMethodIsUsed() {
+        return readBoolMethodIsUsed;
+    }
+
+    public boolean vecTimesVecMethodIsUsed() {
+        return vecTimesVecMethodIsUsed;
+    }
+
+    public boolean vecPlusVecMethodIsUsed() {
+        return vecPlusVecMethodIsUsed;
+    }
+
+    public boolean vecTimesScalarMethodIsUsed() {
+        return vecTimesScalarMethodIsUsed;
+    }
+
+    public boolean scalarTimesVectorMethodIsUsed() {
+        return scalarTimesVectorMethodIsUsed;
+    }
+
 }

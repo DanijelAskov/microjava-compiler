@@ -108,12 +108,12 @@ public class MJCompiler {
 
                     CodeGenerator codeGenerator = new CodeGenerator();
 
-                    CodeGenerator.generatePrintBoolMethod();
-                    CodeGenerator.generateReadBoolMethod();
-                    CodeGenerator.generateVecTimesVecMethod();
-                    CodeGenerator.generateVecPlusVecMethod();
-                    CodeGenerator.generateVecTimesScalarMethod();
-                    CodeGenerator.generateScalarTimesVectorMethod();
+                    if (semanticAnalyzer.printBoolMethodIsUsed()) CodeGenerator.generatePrintBoolMethod();
+                    if (semanticAnalyzer.readBoolMethodIsUsed()) CodeGenerator.generateReadBoolMethod();
+                    if (semanticAnalyzer.vecTimesVecMethodIsUsed()) CodeGenerator.generateVecTimesVecMethod();
+                    if (semanticAnalyzer.vecPlusVecMethodIsUsed()) CodeGenerator.generateVecPlusVecMethod();
+                    if (semanticAnalyzer.vecTimesScalarMethodIsUsed()) CodeGenerator.generateVecTimesScalarMethod();
+                    if (semanticAnalyzer.scalarTimesVectorMethodIsUsed()) CodeGenerator.generateScalarTimesVectorMethod();
 
                     program.traverseBottomUp(codeGenerator);
 
