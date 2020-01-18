@@ -1,4 +1,4 @@
-# MicroJava Compiler (see also [MicroJava Disassembler](https://github.com/DanijelAskov/microjava-disassembler))
+# MicroJava Compiler (see also [MicroJava Disassembler](https://danijelaskov.github.io/microjava-disassembler/))
 
 ## Introduction
 
