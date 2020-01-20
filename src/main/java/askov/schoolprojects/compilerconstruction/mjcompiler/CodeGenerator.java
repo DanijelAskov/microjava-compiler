@@ -833,6 +833,7 @@ public class CodeGenerator extends VisitorAdaptor {
 
     private class ThisParameterLoader extends CodeGenerator {
 
+        @Override
         public void visit(IdentDesignator identDesignator) {
             int identDesignatorKind = identDesignator.obj.getKind();
             Obj obj = Tab.noObj;
@@ -858,20 +859,24 @@ public class CodeGenerator extends VisitorAdaptor {
             }
         }
 
+        @Override
         public void visit(MemberAccessDesignator memberAccessDesignator) {
             Code.load(memberAccessDesignator.getDesignatorStart().obj);
         }
 
     }
 
+    @Override
     public void visit(ClassName className) {
         currentClassObj = className.obj;
     }
 
+    @Override
     public void visit(ClassDecl classDecl) {
         currentClassObj = Tab.noObj;
     }
 
+    @Override
     public void visit(MethodName methodName) {
         Obj methodNameObj = methodName.obj;
         methodNameObj.setAdr(Code.pc);
@@ -889,6 +894,7 @@ public class CodeGenerator extends VisitorAdaptor {
         Code.put(methodNameObj.getLocalSymbols().size());
     }
 
+    @Override
     public void visit(MethodDecl methodDecl) {
         Obj methodNameObj = methodDecl.getMethodName().obj;
         if (methodNameObj.getType() == Tab.noType) {
@@ -900,6 +906,7 @@ public class CodeGenerator extends VisitorAdaptor {
         }
     }
 
+    @Override
     public void visit(ActParsEnd actParsEnd) {
         Designator methodDesignator = (actParsEnd.getParent() instanceof MethodCallDesignatorStatement)
                 ? ((MethodCallDesignatorStatement) actParsEnd.getParent()).getDesignator()
@@ -931,26 +938,31 @@ public class CodeGenerator extends VisitorAdaptor {
         }
     }
 
+    @Override
     public void visit(ReturnNothingStatement returnNothingStatement) {
         Code.put(Code.exit);
         Code.put(Code.return_);
     }
 
+    @Override
     public void visit(ReturnExprStatement returnExprStatement) {
         Code.put(Code.exit);
         Code.put(Code.return_);
     }
 
+    @Override
     public void visit(MethodCallDesignatorStatement methodCallDesignatorStatement) {
         if (methodCallDesignatorStatement.getDesignator().obj.getType() != Tab.noType) {
             Code.put(Code.pop);
         }
     }
 
+    @Override
     public void visit(AssignmentDesignatorStatement assignmentDesignatorStatement) {
         Code.store(assignmentDesignatorStatement.getDesignator().obj);
     }
 
+    @Override
     public void visit(ReadStatement readStatement) {
         Struct designatorType = readStatement.getDesignator().obj.getType();
 
@@ -966,6 +978,7 @@ public class CodeGenerator extends VisitorAdaptor {
         Code.store(readStatement.getDesignator().obj);
     }
 
+    @Override
     public void visit(PrintExprStatement printExprStatement) {
         Struct exprType = printExprStatement.getExpr().obj.getType();
 
@@ -981,6 +994,7 @@ public class CodeGenerator extends VisitorAdaptor {
         }
     }
 
+    @Override
     public void visit(PrintExprIntConstStatement printExprIntConstStatement) {
         Struct exprType = printExprIntConstStatement.getExpr().obj.getType();
 
@@ -996,6 +1010,7 @@ public class CodeGenerator extends VisitorAdaptor {
         }
     }
 
+    @Override
     public void visit(IncrDesignatorStatement incrDesignatorStatement) {
         Obj designatorObj = incrDesignatorStatement.getDesignator().obj;
         if (designatorObj.getKind() == Obj.Var && designatorObj.getLevel() == 1) {
@@ -1005,8 +1020,7 @@ public class CodeGenerator extends VisitorAdaptor {
         } else {
             if (incrDesignatorStatement.getDesignator() instanceof ArrayElemAccessDesignator) {
                 incrDesignatorStatement.getDesignator().traverseBottomUp(this);
-            } // Ova if-naredba je obavezna za ispravan rad kompajlera, ali je nedostajala na odbrani (24.06.2018).
-            // Zato sam morao da je dodam na licu mesta.
+            }
             else if (incrDesignatorStatement.getDesignator() instanceof MemberAccessDesignator) {
                 Code.put(Code.dup);
                 // Napravi repliku pokazivaca na tekuci objekat (sada se na vrhu steka izraza nalaze dva ovakva pokazivaca, P1 i P2) 
@@ -1020,6 +1034,7 @@ public class CodeGenerator extends VisitorAdaptor {
         }
     }
 
+    @Override
     public void visit(DecrDesignatorStatement decrDesignatorStatement) {
         Obj designatorObj = decrDesignatorStatement.getDesignator().obj;
         if (designatorObj.getKind() == Obj.Var && designatorObj.getLevel() == 1) {
@@ -1029,8 +1044,7 @@ public class CodeGenerator extends VisitorAdaptor {
         } else {
             if (decrDesignatorStatement.getDesignator() instanceof ArrayElemAccessDesignator) {
                 decrDesignatorStatement.getDesignator().traverseBottomUp(this);
-            } // Ova if-naredba je obavezna za ispravan rad kompajlera, ali je nedostajala na odbrani (24.06.2018).
-            // Zato sam morao da je dodam na licu mesta.
+            }
             else if (decrDesignatorStatement.getDesignator() instanceof MemberAccessDesignator) {
                 Code.put(Code.dup);
                 // Napravi repliku pokazivaca na tekuci objekat (sada se na vrhu steka izraza nalaze dva ovakva pokazivaca, P1 i P2)                  
@@ -1044,12 +1058,14 @@ public class CodeGenerator extends VisitorAdaptor {
         }
     }
 
+    @Override
     public void visit(DoWhileStatementStart doWhileStatementStart) {
         currentBreakJumps.push(new ArrayList<Integer>());
         currentContinueJumps.push(new ArrayList<Integer>());
         currentDoWhileStartAddress.push(Code.pc);
     }
 
+    @Override
     public void visit(DoWhileStatement doWhileStatement) {
         for (int address : currentBreakJumps.pop()) {
             Code.fixup(address);
@@ -1064,6 +1080,7 @@ public class CodeGenerator extends VisitorAdaptor {
         }
     }
 
+    @Override
     public void visit(ConditionEnd conditionEnd) {
         if (conditionEnd.getParent() instanceof IfThenStatement
                 || conditionEnd.getParent() instanceof IfThenElseStatement) {
@@ -1077,6 +1094,7 @@ public class CodeGenerator extends VisitorAdaptor {
         }
     }
 
+    @Override
     public void visit(Else else_) {
         Code.putJump(0);
         for (Integer address : currentNextCondTermJumps.pop()) {
@@ -1085,26 +1103,31 @@ public class CodeGenerator extends VisitorAdaptor {
         currentSkipElseJump.push(new Integer(Code.pc - 2));
     }
 
+    @Override
     public void visit(IfThenStatement ifThenStatement) {
         for (Integer address : currentNextCondTermJumps.pop()) {
             Code.fixup(address);
         }
     }
 
+    @Override
     public void visit(IfThenElseStatement ifThenElseStatement) {
         Code.fixup(currentSkipElseJump.pop().intValue());
     }
 
+    @Override
     public void visit(BreakStatement breakStatement) {
         Code.putJump(0);
         currentBreakJumps.peek().add(Code.pc - 2);
     }
 
+    @Override
     public void visit(ContinueStatement continueStatement) {
         Code.putJump(0);
         currentContinueJumps.peek().add(Code.pc - 2);
     }
 
+    @Override
     public void visit(ConditionStart conditionStart) {
         if (conditionStart.getParent() instanceof DoWhileStatement) {
             List<Integer> continuesList = currentContinueJumps.pop();
@@ -1115,6 +1138,7 @@ public class CodeGenerator extends VisitorAdaptor {
         currentNextCondTermJumps.push(new ArrayList<Integer>());
     }
 
+    @Override
     public void visit(TermCondition termCondition) {
         if (termCondition.getParent() instanceof OrCondition) {
             Code.putJump(0);
@@ -1126,41 +1150,50 @@ public class CodeGenerator extends VisitorAdaptor {
         }
     }
 
+    @Override
     public void visit(ExprCondFactor exprCondFactor) {
         Code.load(new Obj(Obj.Con, "true", MJTab.BOOL_TYPE, 1, 0));
         Code.putFalseJump(Code.eq, 0);
         currentNextCondTermJumps.peek().add(Code.pc - 2);
     }
 
+    @Override
     public void visit(RelOpCondFactor relOpCondFactor) {
         Code.putFalseJump(currentConditionalJump, 0);
         currentNextCondTermJumps.peek().add(Code.pc - 2);
     }
 
+    @Override
     public void visit(EqRelop eqRelop) {
         currentConditionalJump = Code.eq;
     }
 
+    @Override
     public void visit(NeqRelop neqRelop) {
         currentConditionalJump = Code.ne;
     }
 
+    @Override
     public void visit(GtRelop gtRelop) {
         currentConditionalJump = Code.gt;
     }
 
+    @Override
     public void visit(GeqRelop geqRelop) {
         currentConditionalJump = Code.ge;
     }
 
+    @Override
     public void visit(LtRelop ltRelop) {
         currentConditionalJump = Code.lt;
     }
 
+    @Override
     public void visit(LeqRelop leqRelop) {
         currentConditionalJump = Code.le;
     }
 
+    @Override
     public void visit(IdentDesignator identDesignator) {
         int identDesignatorKind = identDesignator.obj.getKind();
         Obj obj = Tab.noObj;
@@ -1189,6 +1222,7 @@ public class CodeGenerator extends VisitorAdaptor {
         }
     }
 
+    @Override
     public void visit(ArrayElemAcessDesignatorLBracket arrAcessDesignatorLBracket) {
         SyntaxNode parent = arrAcessDesignatorLBracket.getParent();
         Code.load((parent instanceof ArrayElemAccessDesignator)
@@ -1196,6 +1230,7 @@ public class CodeGenerator extends VisitorAdaptor {
                 : ((ArrayElemAccessDesignatorStart) parent).getDesignatorStart().obj);
     }
 
+    @Override
     public void visit(MemberAccessDesignator memberAccessDesignator) {
         Code.load(memberAccessDesignator.getDesignatorStart().obj);
         if (memberAccessDesignator.obj.getKind() == Obj.Meth) {
@@ -1203,6 +1238,7 @@ public class CodeGenerator extends VisitorAdaptor {
         }
     }
 
+    @Override
     public void visit(IdentDesignatorStart identDesignatorStart) {
         if (!currentClassObj.equals(Tab.noObj)) {
             int identDesignatorStartKind = identDesignatorStart.obj.getKind();
@@ -1213,14 +1249,17 @@ public class CodeGenerator extends VisitorAdaptor {
         }
     }
 
+    @Override
     public void visit(MemberAccessDesignatorStart memberAccessDesignatorStart) {
         Code.load(memberAccessDesignatorStart.getDesignatorStart().obj);
     }
 
+    @Override
     public void visit(MinusTermExpr minusTermExpr) {
         Code.put(Code.neg);
     }
 
+    @Override
     public void visit(AddopExpr addopExpr) {
         Struct exprType = addopExpr.obj.getType();
         Struct termType = addopExpr.obj.getType();
@@ -1237,6 +1276,7 @@ public class CodeGenerator extends VisitorAdaptor {
         }
     }
 
+    @Override
     public void visit(MulopTerm mulopTerm) {
         Mulop mulop = mulopTerm.getMulop();
         Struct termType = mulopTerm.getTerm().obj.getType();
@@ -1266,22 +1306,27 @@ public class CodeGenerator extends VisitorAdaptor {
         }
     }
 
+    @Override
     public void visit(DesignatorFactor designatorFactor) {
         Code.load(designatorFactor.obj);
     }
 
+    @Override
     public void visit(IntFactor intFactor) {
         Code.load(intFactor.obj);
     }
 
+    @Override
     public void visit(CharFactor charFactor) {
         Code.load(charFactor.obj);
     }
 
+    @Override
     public void visit(BoolFactor boolFactor) {
         Code.load(boolFactor.obj);
     }
 
+    @Override
     public void visit(NewScalarFactor newScalarFactor) {
         Code.put(Code.new_);
         try {
@@ -1309,6 +1354,7 @@ public class CodeGenerator extends VisitorAdaptor {
         }
     }
 
+    @Override
     public void visit(NewVectorFactor newVectorFactor) {
         Struct type = newVectorFactor.getType().obj.getType();
         Code.put(Code.newarray);
