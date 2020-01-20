@@ -104,7 +104,7 @@ public class CodeGenerator extends VisitorAdaptor {
 
         private final int code;
 
-        private RuntimeError(int code) {
+        RuntimeError(int code) {
             this.code = code;
         }
 
@@ -122,8 +122,8 @@ public class CodeGenerator extends VisitorAdaptor {
     private final Stack<List<Integer>> currentNextCondTermJumps = new Stack<>();
     private final List<Integer> currentSkipNextCondTermJumps = new ArrayList<>();
     private int currentConditionalJump = 0;
-    private Stack<Obj> thisParameterObjs = new Stack<>();
-    private Map<Obj, List<Integer>> notYetDeclaredMethod = new HashMap<>();
+    private final Stack<Obj> thisParameterObjs = new Stack<>();
+    private final Map<Obj, List<Integer>> notYetDeclaredMethod = new HashMap<>();
 
     public int getMainPc() {
         return mainPc;
@@ -167,7 +167,7 @@ public class CodeGenerator extends VisitorAdaptor {
 
         // if (b) {
         // width2 = 4;
-        Code.put(Code.load_n + 0);
+        Code.put(Code.load_n);
         Code.put(Code.const_n + 1);
         Code.put(Code.jcc + Code.ne);
         Code.put2(8);
@@ -187,7 +187,7 @@ public class CodeGenerator extends VisitorAdaptor {
         Code.put(Code.store_3);
         // if (blank > 0) {
         Code.put(Code.load_3);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.jcc + Code.le);
         Code.put2(21);
         // do {
@@ -202,13 +202,13 @@ public class CodeGenerator extends VisitorAdaptor {
         Code.put(-1);
         // } while (blank > 0);
         Code.put(Code.load_3);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.jcc + Code.le);
         Code.put2(6);
         Code.put(Code.jmp);
         Code.put2(-15);
         // if (b) {
-        Code.put(Code.load_n + 0);
+        Code.put(Code.load_n);
         Code.put(Code.const_n + 1);
         Code.put(Code.jcc + Code.ne);
         Code.put2(34);
@@ -279,9 +279,9 @@ public class CodeGenerator extends VisitorAdaptor {
         Code.put(Code.const_5);
         Code.put(Code.newarray);
         Code.put(0);
-        Code.put(Code.store_n + 0);
+        Code.put(Code.store_n);
         // i = 0;
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.store_1);
         // do {
         // do {
@@ -291,12 +291,12 @@ public class CodeGenerator extends VisitorAdaptor {
         Code.put(Code.jcc + Code.ge);
         Code.put2(14);
         // read(inp[i]);
-        Code.put(Code.load_n + 0);
+        Code.put(Code.load_n);
         Code.put(Code.load_1);
         Code.put(Code.bread);
         Code.put(Code.bastore);
         // skip = inp[i];
-        Code.put(Code.load_n + 0);
+        Code.put(Code.load_n);
         Code.put(Code.load_1);
         Code.put(Code.baload);
         Code.put(Code.store_2);
@@ -330,7 +330,7 @@ public class CodeGenerator extends VisitorAdaptor {
         // }
         int skipAddress = 46;
         for (int i = 0; i < MJTab.TRUE.length(); i++) {
-            Code.put(Code.load_n + 0);
+            Code.put(Code.load_n);
             Code.load(new Obj(Obj.Con, "", MJTab.intType, i, 0));
             Code.put(Code.baload);
             Code.load(new Obj(Obj.Con, "", MJTab.charType, MJTab.TRUE.charAt(i), 0));
@@ -353,7 +353,7 @@ public class CodeGenerator extends VisitorAdaptor {
         // }
         skipAddress = 61;
         for (int i = 0; i < MJTab.FALSE.length(); i++) {
-            Code.put(Code.load_n + 0);
+            Code.put(Code.load_n);
             Code.load(new Obj(Obj.Con, "", MJTab.intType, i, 0));
             Code.put(Code.baload);
             Code.load(new Obj(Obj.Con, "", MJTab.charType, MJTab.FALSE.charAt(i), 0));
@@ -366,12 +366,12 @@ public class CodeGenerator extends VisitorAdaptor {
         Code.put4(6);
         Code.put(Code.jcc + Code.ne);
         Code.put2(8);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.store_3);
         Code.put(Code.jmp);
         Code.put2(13);
         // i = 0;
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.store_1);
         // } while (true);
         Code.put(Code.const_1);
@@ -420,15 +420,15 @@ public class CodeGenerator extends VisitorAdaptor {
         Code.put(5);
         // if (a != null && b != null) {
         // la = len(a);
-        Code.put(Code.load_n + 0);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.load_n);
+        Code.put(Code.const_n);
         Code.put(Code.jcc + Code.eq);
         Code.put2(54);
         Code.put(Code.load_n + 1);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.jcc + Code.eq);
         Code.put2(49);
-        Code.put(Code.load_n + 0);
+        Code.put(Code.load_n);
         Code.put(Code.arraylength);
         Code.put(Code.store_2);
         // if (la == len(b)) {
@@ -438,16 +438,16 @@ public class CodeGenerator extends VisitorAdaptor {
         Code.put(Code.arraylength);
         Code.put(Code.jcc + Code.ne);
         Code.put2(40);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.store);
         Code.put(4);
         // if (la > 0) {
         // i = 0;
         Code.put(Code.load_2);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.jcc + Code.le);
         Code.put2(28);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.store_3);
         // do {
         // result = result + a[i] * b[i];
@@ -456,7 +456,7 @@ public class CodeGenerator extends VisitorAdaptor {
         // }
         Code.put(Code.load);
         Code.put(4);
-        Code.put(Code.load_n + 0);
+        Code.put(Code.load_n);
         Code.put(Code.load_3);
         Code.put(Code.aload);
         Code.put(Code.load_1);
@@ -519,11 +519,11 @@ public class CodeGenerator extends VisitorAdaptor {
         // if (a != null) {
         // la = len(a);
         // result = new int[la];
-        Code.put(Code.load_n + 0);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.load_n);
+        Code.put(Code.const_n);
         Code.put(Code.jcc + Code.eq);
         Code.put2(42);
-        Code.put(Code.load_n + 0);
+        Code.put(Code.load_n);
         Code.put(Code.arraylength);
         Code.put(Code.store_2);
         Code.put(Code.load_2);
@@ -534,10 +534,10 @@ public class CodeGenerator extends VisitorAdaptor {
         // if (la > 0) {
         // i = 0;
         Code.put(Code.load_2);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.jcc + Code.le);
         Code.put2(25);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.store_3);
         // do {
         // result[i] = a[i] * s;
@@ -546,7 +546,7 @@ public class CodeGenerator extends VisitorAdaptor {
         Code.put(Code.load);
         Code.put(4);
         Code.put(Code.load_3);
-        Code.put(Code.load_n + 0);
+        Code.put(Code.load_n);
         Code.put(Code.load_3);
         Code.put(Code.aload);
         Code.put(Code.load_1);
@@ -606,7 +606,7 @@ public class CodeGenerator extends VisitorAdaptor {
         // la = len(a);
         // result = new int[la];
         Code.put(Code.load_1);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.jcc + Code.eq);
         Code.put2(42);
         Code.put(Code.load_1);
@@ -620,10 +620,10 @@ public class CodeGenerator extends VisitorAdaptor {
         // if (la > 0) {
         // i = 0;
         Code.put(Code.load_2);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.jcc + Code.le);
         Code.put2(25);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.store_3);
         // do {
         // result[i] = a[i] * s;
@@ -635,7 +635,7 @@ public class CodeGenerator extends VisitorAdaptor {
         Code.put(Code.load_1);
         Code.put(Code.load_3);
         Code.put(Code.aload);
-        Code.put(Code.load_n + 0);
+        Code.put(Code.load_n);
         Code.put(Code.mul);
         Code.put(Code.astore);
         Code.put(Code.inc);
@@ -691,15 +691,15 @@ public class CodeGenerator extends VisitorAdaptor {
         Code.put(5);
         // if (a != null && b != null) {
         // la = len(a);
-        Code.put(Code.load_n + 0);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.load_n);
+        Code.put(Code.const_n);
         Code.put(Code.jcc + Code.eq);
         Code.put2(55);
         Code.put(Code.load_n + 1);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.jcc + Code.eq);
         Code.put2(50);
-        Code.put(Code.load_n + 0);
+        Code.put(Code.load_n);
         Code.put(Code.arraylength);
         Code.put(Code.store_2);
         // if (la == len(b)) {
@@ -717,10 +717,10 @@ public class CodeGenerator extends VisitorAdaptor {
         // if (la > 0) {
         // i = 0;
         Code.put(Code.load_2);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.jcc + Code.le);
         Code.put2(27);
-        Code.put(Code.const_n + 0);
+        Code.put(Code.const_n);
         Code.put(Code.store_3);
         // do {
         // result[i] = a[i] + b[i];
@@ -730,7 +730,7 @@ public class CodeGenerator extends VisitorAdaptor {
         Code.put(Code.load);
         Code.put(4);
         Code.put(Code.load_3);
-        Code.put(Code.load_n + 0);
+        Code.put(Code.load_n);
         Code.put(Code.load_3);
         Code.put(Code.aload);
         Code.put(Code.load_1);
@@ -760,7 +760,7 @@ public class CodeGenerator extends VisitorAdaptor {
 
     public void generateMethodInvocationCode(Obj overriddenMethod) {
         List<Integer> jmpAddresses = new ArrayList<>();
-        int jccAddress = 0;
+        int jccAddress;
         List<Obj> leafClasses = MJTab.getLeafClasses();
         List<Obj> filteredLeafClasses = new ArrayList<>();
         for (Obj clss : leafClasses) {
@@ -822,7 +822,7 @@ public class CodeGenerator extends VisitorAdaptor {
             methodSignature = null;
             e.printStackTrace();
         }
-        for (int i = 0; i < methodSignature.length(); i++) {
+        for (int i = 0; i < (methodSignature != null ? methodSignature.length() : 0); i++) {
             Code.put4(methodSignature.charAt(i));
         }
         Code.put4(-1);
@@ -836,9 +836,9 @@ public class CodeGenerator extends VisitorAdaptor {
         @Override
         public void visit(IdentDesignator identDesignator) {
             int identDesignatorKind = identDesignator.obj.getKind();
-            Obj obj = Tab.noObj;
+            Obj obj;
             if (!currentClassObj.equals(Tab.noObj)) {
-                obj = new Obj(Obj.Var, "this", currentClassObj.getType(), 0, 1);
+                obj = new Obj(Obj.Var, SemanticAnalyzer.THIS, currentClassObj.getType(), 0, 1);
                 if (identDesignatorKind == Obj.Fld) {
                     Code.load(obj);
                 }
@@ -1020,8 +1020,7 @@ public class CodeGenerator extends VisitorAdaptor {
         } else {
             if (incrDesignatorStatement.getDesignator() instanceof ArrayElemAccessDesignator) {
                 incrDesignatorStatement.getDesignator().traverseBottomUp(this);
-            }
-            else if (incrDesignatorStatement.getDesignator() instanceof MemberAccessDesignator) {
+            } else if (incrDesignatorStatement.getDesignator() instanceof MemberAccessDesignator) {
                 Code.put(Code.dup);
                 // Napravi repliku pokazivaca na tekuci objekat (sada se na vrhu steka izraza nalaze dva ovakva pokazivaca, P1 i P2) 
             }
@@ -1044,8 +1043,7 @@ public class CodeGenerator extends VisitorAdaptor {
         } else {
             if (decrDesignatorStatement.getDesignator() instanceof ArrayElemAccessDesignator) {
                 decrDesignatorStatement.getDesignator().traverseBottomUp(this);
-            }
-            else if (decrDesignatorStatement.getDesignator() instanceof MemberAccessDesignator) {
+            } else if (decrDesignatorStatement.getDesignator() instanceof MemberAccessDesignator) {
                 Code.put(Code.dup);
                 // Napravi repliku pokazivaca na tekuci objekat (sada se na vrhu steka izraza nalaze dva ovakva pokazivaca, P1 i P2)                  
             }
@@ -1060,8 +1058,8 @@ public class CodeGenerator extends VisitorAdaptor {
 
     @Override
     public void visit(DoWhileStatementStart doWhileStatementStart) {
-        currentBreakJumps.push(new ArrayList<Integer>());
-        currentContinueJumps.push(new ArrayList<Integer>());
+        currentBreakJumps.push(new ArrayList<>());
+        currentContinueJumps.push(new ArrayList<>());
         currentDoWhileStartAddress.push(Code.pc);
     }
 
@@ -1070,7 +1068,7 @@ public class CodeGenerator extends VisitorAdaptor {
         for (int address : currentBreakJumps.pop()) {
             Code.fixup(address);
         }
-        int start = currentDoWhileStartAddress.pop().intValue();
+        int start = currentDoWhileStartAddress.pop();
         for (int address : currentSkipNextCondTermJumps) {
             Code.put2(address, (start - address + 1));
         }
@@ -1100,7 +1098,7 @@ public class CodeGenerator extends VisitorAdaptor {
         for (Integer address : currentNextCondTermJumps.pop()) {
             Code.fixup(address);
         }
-        currentSkipElseJump.push(new Integer(Code.pc - 2));
+        currentSkipElseJump.push(Code.pc - 2);
     }
 
     @Override
@@ -1112,7 +1110,7 @@ public class CodeGenerator extends VisitorAdaptor {
 
     @Override
     public void visit(IfThenElseStatement ifThenElseStatement) {
-        Code.fixup(currentSkipElseJump.pop().intValue());
+        Code.fixup(currentSkipElseJump.pop());
     }
 
     @Override
@@ -1135,7 +1133,7 @@ public class CodeGenerator extends VisitorAdaptor {
                 Code.fixup(address);
             }
         }
-        currentNextCondTermJumps.push(new ArrayList<Integer>());
+        currentNextCondTermJumps.push(new ArrayList<>());
     }
 
     @Override
@@ -1146,7 +1144,7 @@ public class CodeGenerator extends VisitorAdaptor {
             for (int address : currentNextCondTermJumps.pop()) {
                 Code.fixup(address);
             }
-            currentNextCondTermJumps.push(new ArrayList<Integer>());
+            currentNextCondTermJumps.push(new ArrayList<>());
         }
     }
 
@@ -1198,7 +1196,7 @@ public class CodeGenerator extends VisitorAdaptor {
         int identDesignatorKind = identDesignator.obj.getKind();
         Obj obj = Tab.noObj;
         if (!currentClassObj.equals(Tab.noObj)) {
-            obj = new Obj(Obj.Var, "this", currentClassObj.getType(), 0, 1);
+            obj = new Obj(Obj.Var, SemanticAnalyzer.THIS, currentClassObj.getType(), 0, 1);
             if (identDesignatorKind == Obj.Fld) {
                 Code.load(obj);
             }
@@ -1243,7 +1241,7 @@ public class CodeGenerator extends VisitorAdaptor {
         if (!currentClassObj.equals(Tab.noObj)) {
             int identDesignatorStartKind = identDesignatorStart.obj.getKind();
             if (identDesignatorStartKind == Obj.Fld) {
-                Obj obj = new Obj(Obj.Var, "this", currentClassObj.getType(), 0, 1);
+                Obj obj = new Obj(Obj.Var, SemanticAnalyzer.THIS, currentClassObj.getType(), 0, 1);
                 Code.load(obj);
             }
         }
