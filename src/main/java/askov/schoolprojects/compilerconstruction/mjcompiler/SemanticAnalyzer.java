@@ -172,7 +172,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     private int doWhileStatementCount = 0;
     private Scope programScope = null;
     private boolean detectErrors = true;
-    public Stack<Obj> thisParameterObjs = new Stack<>();
+    public final Stack<Obj> thisParameterObjs = new Stack<>();
 
     public int getFormParCounter() {
         return formParCounter;
@@ -209,7 +209,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             if (result == Tab.noObj) {
                 // Pretrazuju se nasledjena polja
                 Struct superclass = currentClassObj.getType().getElemType();
-                Obj foundMethod = null;
+                Obj foundMethod;
                 while (superclass != null) {
                     foundMethod = superclass.getMembersTable().searchKey(identName);
                     if (foundMethod != null) {
@@ -232,7 +232,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     private Obj findNearestDeclaration(String identName, Obj instanceObj) {
         Obj result = Tab.noObj;
 
-        SymbolDataStructure targetSymbolDataStructure = null;
+        SymbolDataStructure targetSymbolDataStructure;
         if (currentClassObj.getType() == instanceObj.getType()) {
             // Ako se metoda unutar klase poziva nad instancom klase kojoj sama ona pripada
             targetSymbolDataStructure = MJTab.currentScope.getOuter().getLocals();
@@ -241,7 +241,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         }
 
         Struct superclass = instanceObj.getType();
-        Obj foundMethod = null;
+        Obj foundMethod;
         while (targetSymbolDataStructure != null) {
             foundMethod = targetSymbolDataStructure.searchKey(identName);
             if (foundMethod != null) {
@@ -703,9 +703,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         } else {
             Obj exprObj = returnExprStatement.getExpr().obj;
             Struct exprStruct = exprObj.getType();
-            if (MJUtils.assignableTo(exprStruct, currentMethodReturnType)) {
-                return;
-            } else {
+            if (!MJUtils.assignableTo(exprStruct, currentMethodReturnType)) {
                 if (!currentMethodReturnType.equals(MJTab.noType)
                         && !(currentMethodObj.getName().equals(MAIN) && currentScopeType == ScopeType.GLOBAL_METHOD)) {
                     if (exprStruct != Tab.noType || exprObj.getKind() == Obj.Meth) {
@@ -796,7 +794,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
                 } else {
                     methodSignature = new ClassMethodSignature(methodObj, thisParameterObjs.peek().getType());
                 }
-            } catch (WrongObjKindException e) {
+            } catch (WrongObjKindException ignored) {
             }
             if (methodSignature != null) {
                 if (!methodSignature.isInvokableBy(invokedMethodSignatureGenerator.getMethodSignature())) {
@@ -1165,7 +1163,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
                 } else {
                     methodSignature = new ClassMethodSignature(methodObj, thisParameterObjs.peek().getType());
                 }
-            } catch (WrongObjKindException e) {
+            } catch (WrongObjKindException ignored) {
             }
             if (methodSignature != null) {
                 if (!methodSignature.isInvokableBy(invokedMethodSignatureGenerator.getMethodSignature())) {
@@ -1226,7 +1224,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     @Override
     public void visit(IdentDesignator identDesignator) {
         String identDesignatorIdent = identDesignator.getIdent();
-        Obj identObj = Tab.noObj;
+        Obj identObj;
         SyntaxNode parent = identDesignator.getParent();
 
         if (currentScopeType == ScopeType.CLASS_METHOD) {
@@ -1319,7 +1317,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     @Override
     public void visit(IdentDesignatorStart identDesignatorStart) {
         String identDesignatorStartIdent = identDesignatorStart.getIdent();
-        Obj identObj = Tab.noObj;
+        Obj identObj;
 
         if (currentScopeType == ScopeType.CLASS_METHOD) {
             identObj = findNearestDeclaration(identDesignatorStartIdent, false);
