@@ -23,7 +23,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -56,7 +55,7 @@ public class MJCompiler {
         MJTab.dump(LOGGER);
     }
 
-    public static void main(String[] args) throws IOException, Exception {
+    public static void main(String[] args) throws Exception {
         if (args.length != 2) {
             LOGGER.error("Too few arguments. Usage: MJCompiler <source-file> <obj-file>");
             return;
@@ -102,8 +101,10 @@ public class MJCompiler {
                     LOGGER.info("Generating bytecode file \"" + objFile.getAbsolutePath() + "\"...");
                     if (objFile.exists()) {
                         LOGGER.info("Deleting old bytecode file \"" + objFile.getAbsolutePath() + "\"...");
-                        objFile.delete();
-                        LOGGER.info("Old bytecode file \"" + objFile.getAbsolutePath() + "\" has been deleted.");
+                        if (objFile.delete())
+                            LOGGER.info("Old bytecode file \"" + objFile.getAbsolutePath() + "\" has been deleted.");
+                        else
+                            LOGGER.error("Old bytecode file \"" + objFile.getAbsolutePath() + "\" has not been deleted.");
                     }
 
                     CodeGenerator codeGenerator = new CodeGenerator();
