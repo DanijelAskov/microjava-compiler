@@ -45,23 +45,23 @@ import askov.schoolprojects.compilerconstruction.mjcompiler.loggers.LexicalError
 	return newSymbol(sym.EOF);
 %eofval}
 
-LineTerminator = \n|\r|\r\n
+LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
-WhiteSpace     = {LineTerminator} | [\t\f\b ]
+Whitespace     = {LineTerminator}|[\t\f\b ]
 
-EndOfLineComment = "//" {InputCharacter}* {LineTerminator}?
-Comment = {EndOfLineComment}
+SingleLineComment = "//"{InputCharacter}*{LineTerminator}?
+Comment = {SingleLineComment}
 
 DecIntegerLiteral = [0-9]+
-PrintableCharLiteral = "'" [\040-\176] "'"
-BooleanLiteral = "true" | "false"
-Identifier = ([a-z]|[A-Z])[a-zA-Z0-9_]*
+PrintableCharLiteral = "'"[ -~]"'"
+BooleanLiteral = "true"|"false"
+Identifier = [a-zA-Z][a-zA-Z0-9_]*
 
 %%
 
 <YYINITIAL> {
 	// Whitespace characters (Beline)
-	{WhiteSpace}           { /* ignore */ }
+	{Whitespace}           { /* ignore */ }
 	
 	// Keywords (Ključne reci)
 	"program"              { return newSymbol(sym.PROGRAM); }
@@ -99,7 +99,8 @@ Identifier = ([a-z]|[A-Z])[a-zA-Z0-9_]*
 	// Logical (Logički)
 	"&&"                   { return newSymbol(sym.AND); }
 	"||"                   { return newSymbol(sym.OR); }
-	// Assignment (Dodele)
+
+	// Assignment (Dodela vrednosti)
 	"="                    { return newSymbol(sym.ASSIGN); }
 	
 	// Separators (Separatori)
@@ -127,6 +128,6 @@ Identifier = ([a-z]|[A-Z])[a-zA-Z0-9_]*
 	{Identifier}           { return newSymbol(sym.IDENT, yytext()); }
 	
 	// Lexical error (Leksička greška)
-	// Svi tekst editori numerisu linije počev od broja 1, pa je zato na yyline dodat broj 1.
+	// Svi tekst-editori numerisu linije počev od broja 1. Stoga je na yyline dodat broj 1.
 	[^]                    { lexicalErrorMJLogger.log(yytext(), yyline + 1, yycolumn + 1); return newSymbol(sym.ERROR); }
 }
