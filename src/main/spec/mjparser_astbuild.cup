@@ -256,7 +256,7 @@ precedence left ELSE;
 /*
  * Smene su navođene u poretku koji odgovara preorder obilasku sintaksnog stabla.
  * Atributi sa nazivom "dummy" uvedeni su, kao što im i ime sugeriše, ne zbog potrebe da se koristi njihova vrednost,
- * već da bi se mogao zapamtiti u odgavarajucem sintaksnom čvoru broj linije, u izvornom fajlu MikroJava programa, koja sadrži odgovarajući neterminal.
+ * već da bi se mogao zapamtiti u odgavarajucem sintaksnom �?voru broj linije, u izvornom fajlu MikroJava programa, koja sadrži odgovarajući neterminal.
  */
 
 Program               ::= (Program) PROGRAM ProgramName:P1 DeclList:D2 LBRACE MethodDeclList:M3 ProgramEnd:P4 {: RESULT=new Program(P1, D2, M3, P4); RESULT.setLine(P1left); :};
