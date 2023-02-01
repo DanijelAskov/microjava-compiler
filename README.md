@@ -1,6 +1,7 @@
 # MicroJava Compiler
 
 ![Build & Test Java Project](https://github.com/DanijelAskov/microjava-compiler/actions/workflows/gradle.yml/badge.svg)
+[![CodeFactor](https://www.codefactor.io/repository/github/danijelaskov/microjava-compiler/badge)](https://www.codefactor.io/repository/github/danijelaskov/microjava-compiler)
 
 ## Introduction
 
