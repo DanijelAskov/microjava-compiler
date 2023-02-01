@@ -42,7 +42,6 @@ Note that I have used custom directory structure (not the one defined in the spe
 * There is no `Object` class, the top‐most class, the class from which all other classes are implicitly derived.
 * There is no garbage collector (allocated objects are only deallocated when the program ends).
 * Predeclared static methods are `ord` (converts `char` to `int`), `chr` (converts `int` to `char`) and `len` (returns array's length).
-  
 
 ## Syntax specification
 
@@ -91,7 +90,7 @@ MicroJava's single line comment starts with two forward slashes with no white sp
 
 ## Building and testing the project
 
-This project uses [Gradle](https://docs.gradle.org/current/userguide/userguide.html).
+This project uses [Gradle 7.3](https://docs.gradle.org/current/userguide/userguide.html) and [Java 17](https://adoptium.net/temurin/) (the latest LTS release as of February 2023).
 Open command-line interpreter and type one of the following commands:
 
 * `gradlew genLexer` (Windows) or `./gradlew genLexer` (macOS and Linux), to generate lexer (tokenizer) implementation ([`MJLexer.java`](src/main/java/askov/schoolprojects/compilerconstruction/mjcompiler/MJLexer.java)) based on [lexer specification](src/main/spec/mjlexer.flex).
