@@ -1,5 +1,7 @@
 # MicroJava Compiler
 
+![Build & Test Java Project](https://github.com/DanijelAskov/microjava-compiler/actions/workflows/gradle.yml/badge.svg)
+
 ## Introduction
 
 **MicroJava** is a *high-level programming language*.
