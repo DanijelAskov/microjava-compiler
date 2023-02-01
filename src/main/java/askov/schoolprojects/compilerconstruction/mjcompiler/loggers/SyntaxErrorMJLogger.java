@@ -38,33 +38,16 @@ public class SyntaxErrorMJLogger extends MJLogger<Symbol> {
     @Override
     protected String messageBody(Symbol loggedObject, Object... context) {
         SyntaxErrorKind syntaxErrorKind = (SyntaxErrorKind) context[0];
-        String message = null;
-        switch (syntaxErrorKind) {
-            case INV_GLOBAL_VAR_DECL:
-                message = "Invalid global variable declaration. Parsing continued";
-                break;
-            case INV_CLASS_INHERITANCE:
-                message = "Invalid class inheritance declaration. Parsing continued";
-                break;
-            case INV_CLASS_FIELD_DECL:
-                message = "Invalid class field declaration. Parsing continued";
-                break;
-            case INV_FORM_PAR:
-                message = "Invalid formal parameter declaration. Parsing continued";
-                break;
-            case INV_ASSIGNMENT:
-                message = "Invalid assignment statement. Parsing continued";
-                break;
-            case INV_IF_STMT_COND:
-                message = "Invalid if-statement condition. Parsing continued";
-                break;
-            case FATAL_ERROR:
-                message = "Fatal syntax error. Parsing aborted";
-                break;
-            case INV_DECL:
-                message = "Invalid declaration. Parsing continued";
-                break;
-        }
+        String message = switch (syntaxErrorKind) {
+            case INV_GLOBAL_VAR_DECL -> "Invalid global variable declaration. Parsing continued";
+            case INV_CLASS_INHERITANCE -> "Invalid class inheritance declaration. Parsing continued";
+            case INV_CLASS_FIELD_DECL -> "Invalid class field declaration. Parsing continued";
+            case INV_FORM_PAR -> "Invalid formal parameter declaration. Parsing continued";
+            case INV_ASSIGNMENT -> "Invalid assignment statement. Parsing continued";
+            case INV_IF_STMT_COND -> "Invalid if-statement condition. Parsing continued";
+            case FATAL_ERROR -> "Fatal syntax error. Parsing aborted";
+            case INV_DECL -> "Invalid declaration. Parsing continued";
+        };
         return message;
     }
 

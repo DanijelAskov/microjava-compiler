@@ -69,9 +69,7 @@ public class VMT {
 
     public void generateCreationCode() {
         if (!methods.isEmpty()) {
-            Iterator<Obj> iterator = methods.iterator();
-            while (iterator.hasNext()) {
-                Obj method = iterator.next();
+            for (Obj method : methods) {
                 String methodSignature;
                 try {
                     methodSignature = MJUtils.getCompactClassMethodSignature(method);
@@ -84,7 +82,7 @@ public class VMT {
                     putInStaticMemoryZone(methodSignature.charAt(i));
                 }
                 putInStaticMemoryZone(NAME_ADDR_SEPARATOR);
-                putInStaticMemoryZone(methodAddress.intValue());
+                putInStaticMemoryZone(methodAddress);
             }
             putInStaticMemoryZone(TABLE_TERMINATOR);
         }
@@ -120,7 +118,7 @@ public class VMT {
             stringBuilder.append(")");
             stringBuilder.append(" -> " + method.getAdr() + (iterator.hasNext() ? "\n" : ""));
         }
-        return stringBuilder.toString() + "\n}";
+        return stringBuilder + "\n}";
     }
 
     public boolean isEmpty() {

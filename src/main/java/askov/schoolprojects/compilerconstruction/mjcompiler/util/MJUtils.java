@@ -52,24 +52,31 @@ public final class MJUtils {
 
     public static String typeToString(Struct type) {
         switch (type.getKind()) {
-            case Struct.Bool:
+            case Struct.Bool -> {
                 return "bool";
-            case Struct.Int:
+            }
+            case Struct.Int -> {
                 return "int";
-            case Struct.Char:
+            }
+            case Struct.Char -> {
                 return "char";
-            case Struct.Array:
+            }
+            case Struct.Array -> {
                 return typeToString(type.getElemType()) + "[]";
-            case Struct.Class:
+            }
+            case Struct.Class -> {
                 if (type == MJTab.nullType) {
                     return "null";
                 } else {
                     return MJTab.findObjForClass(type).getName();
                 }
-            case Struct.None:
+            }
+            case Struct.None -> {
                 return "void";
-            default:
+            }
+            default -> {
                 return null;
+            }
         }
     }
 

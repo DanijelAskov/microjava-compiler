@@ -43,31 +43,24 @@ public final class SymbolUsageMJLogger extends MJLogger<Obj> {
         symbolTableVisitor.clearOutput();
         obj.accept(symbolTableVisitor);
         switch (obj.getKind()) {
-            case Obj.NO_VALUE:
-                message = "undeclared symbol \"" + obj.getName() + "\"";
-                break;
-            case Obj.Con:
-                message = "symbolic constant \"" + obj.getName() + "\"";
-                break;
-            case Obj.Var: {
+            case Obj.NO_VALUE -> message = "undeclared symbol \"" + obj.getName() + "\"";
+            case Obj.Con -> message = "symbolic constant \"" + obj.getName() + "\"";
+            case Obj.Var -> {
                 String scalarOrVector = obj.getType().getKind() == Struct.Array ? "vector" : "scalar";
                 switch (obj.getLevel()) {
-                    case 0:
-                        message = "global " + scalarOrVector + " variable \"" + obj.getName() + "\"";
-                        break;
-                    case 1:
+                    case 0 -> message = "global " + scalarOrVector + " variable \"" + obj.getName() + "\"";
+                    case 1 -> {
                         boolean thisParameter = obj.getName().equals(SemanticAnalyzer.THIS);
                         if (obj.getAdr() < ((Obj) context[0]).getLevel()) {
                             message = (thisParameter ? "implicit " : "") + scalarOrVector + " formal parameter \""
-                                    + obj.getName() + "\"";
+                                + obj.getName() + "\"";
                         } else {
                             message = "local " + scalarOrVector + " variable \"" + obj.getName() + "\"";
                         }
-                        break;
+                    }
                 }
             }
-            break;
-            case Obj.Meth:
+            case Obj.Meth -> {
                 boolean globalMethod = true;
                 for (Obj formalPar : obj.getLocalSymbols()) {
                     if (formalPar.getName().equals(SemanticAnalyzer.THIS)) {
@@ -80,16 +73,13 @@ public final class SymbolUsageMJLogger extends MJLogger<Obj> {
                 } else {
                     message = "inner class method \"" + obj.getName() + "\" invocation";
                 }
-                break;
-            case Obj.Fld:
+            }
+            case Obj.Fld -> {
                 String scalarOrVector = obj.getType().getKind() == Struct.Array ? "vector" : "scalar";
                 message = scalarOrVector + " inner class field \"" + obj.getName() + "\" access";
-                break;
-            case Obj.Elem:
-                message = "vector \"" + ((Obj) context[0]).getName() + "\" element access";
-                break;
-            case Obj.Type:
-                message = "inner class \"" + obj.getName() + "\" instantiation";
+            }
+            case Obj.Elem -> message = "vector \"" + ((Obj) context[0]).getName() + "\" element access";
+            case Obj.Type -> message = "inner class \"" + obj.getName() + "\" instantiation";
         }
 
         return message + ", " + symbolTableVisitor.getOutput();

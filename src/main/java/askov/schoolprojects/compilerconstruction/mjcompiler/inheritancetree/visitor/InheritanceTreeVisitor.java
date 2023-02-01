@@ -23,6 +23,6 @@ import askov.schoolprojects.compilerconstruction.mjcompiler.inheritancetree.Inhe
 
 public interface InheritanceTreeVisitor {
 
-    public void visit(InheritanceTreeNode node);
+    void visit(InheritanceTreeNode node);
 
 }

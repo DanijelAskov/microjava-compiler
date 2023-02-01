@@ -46,13 +46,10 @@ public class Log4JUtils {
         Appender appenderAll = root.getAppender("file_all"), appenderError = root.getAppender("file_err"),
                 appenderInfo = root.getAppender("file_info");
 
-        if (!(appenderAll instanceof FileAppender) || !(appenderError instanceof FileAppender)
-                || !(appenderInfo instanceof FileAppender)) {
+        if (!(appenderAll instanceof FileAppender fAppenderAll) || !(appenderError instanceof FileAppender fAppenderError)
+                || !(appenderInfo instanceof FileAppender fAppenderInfo)) {
             return;
         }
-
-        FileAppender fAppenderAll = (FileAppender) appenderAll, fAppenderError = (FileAppender) appenderError,
-                fAppenderInfo = (FileAppender) appenderInfo;
 
         String fNameAll = fAppenderAll.getFile(), fNameError = fAppenderError.getFile(),
                 fNameInfo = fAppenderInfo.getFile();

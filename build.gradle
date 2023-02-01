@@ -6,9 +6,6 @@ plugins {
 group 'askov.schoolprojects.compilerconstruction.mjcompiler'
 version '1.0'
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = sourceCompatibility
-
 repositories {
     mavenCentral()
     flatDir {
@@ -32,19 +29,19 @@ test {
     }
 }
 
-task(disassemble, type: JavaExec) {
+tasks.register('disassemble', JavaExec) {
     mainClass = 'rs.etf.pp1.mj.runtime.disasm'
     classpath = sourceSets.main.runtimeClasspath
     args "src/test/resources/simple_calculator.obj"
 }
 
-task(genLexer, type: JavaExec) {
+tasks.register('genLexer', JavaExec) {
     mainClass = 'JFlex.Main'
     classpath = sourceSets.main.compileClasspath
     args "-d", "src/main/java/askov/schoolprojects/compilerconstruction/mjcompiler", "src/main/spec/mjlexer.flex"
 }
 
-task(genParser, type: JavaExec) {
+tasks.register('genParser', JavaExec) {
     mainClass = 'java_cup.Main'
     classpath = sourceSets.main.compileClasspath - files("libs/JFlex.jar")
     workingDir = 'src/main/java'

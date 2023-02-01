@@ -50,12 +50,8 @@ public abstract class MJLogger<T> {
                         : "")
                 + ": " + this.messageBody(loggedObject, context) + ".";
         switch (this.kind) {
-            case INFO_LOGGER:
-                log.info(message);
-                break;
-            case ERROR_LOGER:
-                log.error(message);
-                break;
+            case INFO_LOGGER -> log.info(message);
+            case ERROR_LOGER -> log.error(message);
         }
     }
 

@@ -35,7 +35,7 @@ public class MJDumpSymbolTableVisitor extends DumpSymbolTableVisitor {
     }
 
     private ScopeType currentScopeType = ScopeType.UNIVERSE;
-    private boolean newLineEnabled;
+    private final boolean newLineEnabled;
 
     public MJDumpSymbolTableVisitor(boolean newLineEnabled) {
         this.newLineEnabled = newLineEnabled;
@@ -47,22 +47,20 @@ public class MJDumpSymbolTableVisitor extends DumpSymbolTableVisitor {
             output.append(indent);
         }
         switch (objToVisit.getKind()) {
-            case Obj.Con:
+            case Obj.Con -> {
                 if (currentScopeType == ScopeType.PROGRAM) {
                     output.append("[");
                 }
                 output.append("Con ");
-                break;
-            case Obj.Var:
-                output.append("[Var ");
-                break;
-            case Obj.Type:
+            }
+            case Obj.Var -> output.append("[Var ");
+            case Obj.Type -> {
                 output.append("Type ");
                 if (objToVisit.getType().getKind() == Struct.Class) {
                     currentScopeType = ScopeType.CLASS;
                 }
-                break;
-            case Obj.Meth:
+            }
+            case Obj.Meth -> {
                 if (currentScopeType == ScopeType.PROGRAM) {
                     output.append("[Meth ");
                     currentScopeType = ScopeType.GLOBAL_METHOD;
@@ -72,14 +70,12 @@ public class MJDumpSymbolTableVisitor extends DumpSymbolTableVisitor {
                 } else {
                     output.append("Meth ");
                 }
-                break;
-            case Obj.Fld:
-                output.append("[Fld ");
-                break;
-            case Obj.Prog:
+            }
+            case Obj.Fld -> output.append("[Fld ");
+            case Obj.Prog -> {
                 output.append("Prog ");
                 currentScopeType = ScopeType.PROGRAM;
-                break;
+            }
         }
 
         output.append(objToVisit.getName());
@@ -119,15 +115,12 @@ public class MJDumpSymbolTableVisitor extends DumpSymbolTableVisitor {
         }
 
         switch (objToVisit.getKind()) {
-            case Obj.Var:
-            case Obj.Fld:
-                output.append("]");
-                break;
-            case Obj.Prog:
+            case Obj.Var, Obj.Fld -> output.append("]");
+            case Obj.Prog -> {
                 previousIndentationLevel();
                 currentScopeType = ScopeType.UNIVERSE;
-                break;
-            case Obj.Meth:
+            }
+            case Obj.Meth -> {
                 if (currentScopeType == ScopeType.CLASS_METHOD) {
                     currentScopeType = ScopeType.CLASS;
                     output.append("]");
@@ -135,16 +128,17 @@ public class MJDumpSymbolTableVisitor extends DumpSymbolTableVisitor {
                     currentScopeType = ScopeType.PROGRAM;
                     output.append("]");
                 }
-                break;
-            case Obj.Type:
+            }
+            case Obj.Type -> {
                 if (objToVisit.getType().getKind() == Struct.Class) {
                     currentScopeType = ScopeType.PROGRAM;
                 }
-                break;
-            case Obj.Con:
+            }
+            case Obj.Con -> {
                 if (currentScopeType == ScopeType.PROGRAM) {
                     output.append("]");
                 }
+            }
         }
 
         if (newLineEnabled && (currentScopeType == ScopeType.PROGRAM
@@ -157,18 +151,11 @@ public class MJDumpSymbolTableVisitor extends DumpSymbolTableVisitor {
     @Override
     public void visitStructNode(Struct structToVisit) {
         switch (structToVisit.getKind()) {
-            case Struct.None:
-                output.append("notype");
-                break;
-            case Struct.Int:
-                output.append("int");
-                break;
-            case Struct.Char:
-                output.append("char");
-                break;
-            case Struct.Array:
+            case Struct.None -> output.append("notype");
+            case Struct.Int -> output.append("int");
+            case Struct.Char -> output.append("char");
+            case Struct.Array -> {
                 output.append("Arr of ");
-
                 switch (structToVisit.getElemType().getKind()) {
                     case Struct.None:
                         output.append("notype");
@@ -186,17 +173,15 @@ public class MJDumpSymbolTableVisitor extends DumpSymbolTableVisitor {
                         output.append("bool");
                         break;
                 }
-                break;
-            case Struct.Class:
+            }
+            case Struct.Class -> {
                 output.append("Class [");
                 for (Obj obj : structToVisit.getMembers()) {
                     obj.accept(this);
                 }
                 output.append("]");
-                break;
-            case Struct.Bool:
-                output.append("bool");
-                break;
+            }
+            case Struct.Bool -> output.append("bool");
         }
     }
 
