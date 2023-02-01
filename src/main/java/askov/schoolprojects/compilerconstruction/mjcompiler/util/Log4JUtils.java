@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
  */
 public class Log4JUtils {
 
-    private static Log4JUtils logs = new Log4JUtils();
+    private static final Log4JUtils logs = new Log4JUtils();
 
     public static Log4JUtils instance() {
         return logs;

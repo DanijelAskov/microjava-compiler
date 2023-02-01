@@ -29,7 +29,7 @@ public abstract class MJLogger<T> {
 
     protected enum MJLoggerKind {
         INFO_LOGGER, ERROR_LOGER
-    };
+    }
 
     protected final Logger log = Logger.getLogger(getClass());
     private final MJLoggerKind kind;

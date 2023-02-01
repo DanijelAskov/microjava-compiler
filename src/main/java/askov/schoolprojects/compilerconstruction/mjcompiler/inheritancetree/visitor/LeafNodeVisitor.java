@@ -26,7 +26,7 @@ import askov.schoolprojects.compilerconstruction.mjcompiler.inheritancetree.Inhe
 
 public class LeafNodeVisitor implements InheritanceTreeVisitor {
 
-    public List<InheritanceTreeNode> leafNodes = new ArrayList<>();
+    public final List<InheritanceTreeNode> leafNodes = new ArrayList<>();
 
     @Override
     public void visit(InheritanceTreeNode node) {

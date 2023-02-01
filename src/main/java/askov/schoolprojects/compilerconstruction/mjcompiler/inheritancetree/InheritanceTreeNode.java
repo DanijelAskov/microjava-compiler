@@ -36,9 +36,9 @@ import rs.etf.pp1.symboltable.concepts.Struct;
 public class InheritanceTreeNode {
 
     private final List<InheritanceTreeNode> children = new ArrayList<>();
-    private InheritanceTreeNode parent;
+    private final InheritanceTreeNode parent;
 
-    private Obj clss;
+    private final Obj clss;
     private final VMT vmt = new VMT();
 
     public InheritanceTreeNode(Obj clss, InheritanceTreeNode parent) throws WrongObjKindException, WrongStructKindException {

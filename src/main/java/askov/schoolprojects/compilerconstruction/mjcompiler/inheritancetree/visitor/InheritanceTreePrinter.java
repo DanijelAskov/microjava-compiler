@@ -23,7 +23,7 @@ import askov.schoolprojects.compilerconstruction.mjcompiler.inheritancetree.Inhe
 
 public class InheritanceTreePrinter implements InheritanceTreeVisitor {
 
-    private StringBuilder stringBuilder = new StringBuilder();
+    private final StringBuilder stringBuilder = new StringBuilder();
 
     @Override
     public void visit(InheritanceTreeNode node) {

@@ -57,8 +57,8 @@ public class VMT {
         }
     }
 
-    private Obj sourceWord = new Obj(Obj.Con, "$currentChar", MJTab.charType);
-    private Obj destinationWord = new Obj(Obj.Var, "$currentWordInStaticMemoryZone", MJTab.intType, 0, 0);
+    private final Obj sourceWord = new Obj(Obj.Con, "$currentChar", MJTab.charType);
+    private final Obj destinationWord = new Obj(Obj.Var, "$currentWordInStaticMemoryZone", MJTab.intType, 0, 0);
 
     private void putInStaticMemoryZone(int word) {
         sourceWord.setAdr(word);

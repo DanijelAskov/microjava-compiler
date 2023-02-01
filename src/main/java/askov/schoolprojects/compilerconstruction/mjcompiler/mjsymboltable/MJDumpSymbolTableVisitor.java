@@ -35,7 +35,7 @@ public class MJDumpSymbolTableVisitor extends DumpSymbolTableVisitor {
     }
 
     private ScopeType currentScopeType = ScopeType.UNIVERSE;
-    private boolean newLineEnabled = false;
+    private boolean newLineEnabled;
 
     public MJDumpSymbolTableVisitor(boolean newLineEnabled) {
         this.newLineEnabled = newLineEnabled;
@@ -44,7 +44,7 @@ public class MJDumpSymbolTableVisitor extends DumpSymbolTableVisitor {
     @Override
     public void visitObjNode(Obj objToVisit) {
         if (currentScopeType == ScopeType.PROGRAM) {
-            output.append(indent.toString());
+            output.append(indent);
         }
         switch (objToVisit.getKind()) {
             case Obj.Con:
@@ -109,11 +109,9 @@ public class MJDumpSymbolTableVisitor extends DumpSymbolTableVisitor {
             output.append(" ");
         }
 
-        switch (objToVisit.getKind()) {
-            case Obj.Prog:
-                output.append("\n");
-                nextIndentationLevel();
-                break;
+        if (objToVisit.getKind() == Obj.Prog) {
+            output.append("\n");
+            nextIndentationLevel();
         }
 
         for (Obj o : objToVisit.getLocalSymbols()) {
